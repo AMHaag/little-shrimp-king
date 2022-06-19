@@ -14,8 +14,8 @@ function deleteTask(id, tasksArray) {
 }
 // deleteTask(5, tasks);
 
-const {a} = tasks
-console.log(tasks[0].id)
+let idList = tasks.map(({id})=>id)
+console.log(idList)
 
 
 //* server variables *//
