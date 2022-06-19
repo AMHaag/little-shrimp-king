@@ -9,15 +9,25 @@ function deleteTask(id, tasksArray) {
   let updatedArray = tasksArray.splice(idIndex, 1);
   fs.writeFileSync(
     path.join(__dirname, "./db/db.json"),
-    JSON.stringify({ tasks: tasksArray}, null, 2)
+    JSON.stringify({ tasks: tasksArray }, null, 2)
   );
 }
 // deleteTask(5, tasks);
 
-let idList = tasks.map(({id})=>id)
-console.log(idList)
-
-
+function testId(idArg) {
+  let idList = tasks.map(({ id }) => id);
+  console.log(parseInt(idList[2]));
+  console.log(idArg);
+  for (i = 0; i < idList.length; i++) {
+    if (idArg === parseInt(idList[i])) {
+      console.log(`id number ${idList[i]} is in use`);
+      return false;
+    } else {
+      console.log(`id number ${idList[i]} is available!`);
+    }
+  }
+  return true;
+}
 //* server variables *//
 const PORT = process.env.PORT || 1217;
 const app = express();
@@ -39,6 +49,20 @@ function createNewTask(body, tasksArray) {
 }
 
 //* Data Validation *//
+function testId(idArg) {
+  let idList = tasks.map(({ id }) => id);
+  console.log(parseInt(idList[2]));
+  console.log(idArg);
+  for (i = 0; i < idList.length; i++) {
+    if (idArg === parseInt(idList[i])) {
+      console.log(`id number ${idList[i]} is in use`);
+      return false;
+    } else {
+      console.log(`id number ${idList[i]} is available!`);
+    }
+  }
+  return true;
+}
 function validateTask(task) {
   if (!task.title || typeof task.title !== "string") {
     return false;
@@ -46,12 +70,18 @@ function validateTask(task) {
   if (!task.text || typeof task.text !== "string") {
     return false;
   }
-  if(task.id)
+  if (!testId(task.id)) {
+    task.id++;
+    validateTask(task);
+  }
   return true;
 }
 
 //* Query and Param filtering *//
-
+function findById(id, tasksArray) {
+  const result = tasksArray.filter((task) => task.id === id)[0];
+  return result;
+}
 //* GET routes *//
 
 app.get("/notes", (req, res) => {
@@ -60,7 +90,14 @@ app.get("/notes", (req, res) => {
 app.get("/api/notes", (req, res) => {
   res.json(tasks);
 });
-
+app.get("/api/notes/:id", (req, res) => {
+  const result = findById(req.params.id, tasks);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
+});
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
@@ -79,8 +116,12 @@ app.post("/api/notes", (req, res) => {
 });
 
 //* DELETE routes *//
-app.delete("/api/notes/delete:id", (req, res) => {});
+app.delete("/api/notes/delete/:id", (req, res) => {
+  deleteTask(req.params.id, tasks);
+  console.log("note deleted");
+  res.end();
+});
 //* Port Listener *//
-// app.listen(PORT, () => {
-//   console.log(`API server now on port ${PORT}!`);
-// });
+app.listen(PORT, () => {
+  console.log(`API server now on port ${PORT}!`);
+});

@@ -1,24 +1,19 @@
 {
   "tasks": [
     {
-      "title": "Walk out of the eee",
-      "text": "Room with your friends\n\n",
+      "title": "Example Note",
+      "text": "Here is my submission for the Module 11 Challenge.",
+      "id": "0"
+    },
+    {
+      "title": "Extra Credit",
+      "text": "I also decided to go the extra step and implement the DELETE routes and functionality. ",
       "id": "1"
     },
     {
-      "title": "Body",
-      "text": "Bag",
+      "title": "Problem's Solved Along the W",
+      "text": "One of the things I neglected to foresee was insuring to not create duplicate IDs which I had to go back and do. ",
       "id": "2"
-    },
-    {
-      "title": "Kill everything",
-      "text": "I guess?",
-      "id": "3"
-    },
-    {
-      "title": "Dog",
-      "text": "iididid",
-      "id": "4"
     }
   ]
 }
