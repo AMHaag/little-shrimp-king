@@ -3,31 +3,6 @@ const path = require("path");
 const express = require("express");
 const { tasks } = require("./db/db");
 
-function deleteTask(id, tasksArray) {
-  const isSameId = (element) => element.id == id;
-  let idIndex = tasksArray.findIndex(isSameId);
-  let updatedArray = tasksArray.splice(idIndex, 1);
-  fs.writeFileSync(
-    path.join(__dirname, "./db/db.json"),
-    JSON.stringify({ tasks: tasksArray }, null, 2)
-  );
-}
-// deleteTask(5, tasks);
-
-function testId(idArg) {
-  let idList = tasks.map(({ id }) => id);
-  console.log(parseInt(idList[2]));
-  console.log(idArg);
-  for (i = 0; i < idList.length; i++) {
-    if (idArg === parseInt(idList[i])) {
-      console.log(`id number ${idList[i]} is in use`);
-      return false;
-    } else {
-      console.log(`id number ${idList[i]} is available!`);
-    }
-  }
-  return true;
-}
 //* server variables *//
 const PORT = process.env.PORT || 1217;
 const app = express();
@@ -51,14 +26,12 @@ function createNewTask(body, tasksArray) {
 //* Data Validation *//
 function testId(idArg) {
   let idList = tasks.map(({ id }) => id);
-  console.log(parseInt(idList[2]));
-  console.log(idArg);
   for (i = 0; i < idList.length; i++) {
     if (idArg === parseInt(idList[i])) {
-      console.log(`id number ${idList[i]} is in use`);
+      console.log(`id ${idList[i]} is in use`);
       return false;
     } else {
-      console.log(`id number ${idList[i]} is available!`);
+      console.log(`id ${idList[i]} is available!`);
     }
   }
   return true;
@@ -77,7 +50,16 @@ function validateTask(task) {
   return true;
 }
 
-//* Query and Param filtering *//
+//* Queries and the Delete function *//
+function deleteTask(id, tasksArray) {
+  const isSameId = (element) => element.id == id;
+  let idIndex = tasksArray.findIndex(isSameId);
+  let updatedArray = tasksArray.splice(idIndex, 1);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ tasks: tasksArray }, null, 2)
+  );
+}
 function findById(id, tasksArray) {
   const result = tasksArray.filter((task) => task.id === id)[0];
   return result;
